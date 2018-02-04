@@ -22,6 +22,8 @@ class ResultsList extends Component {
       onSelect: event => this.props.onSelect(result, event),
       // Move selection to item under cursor
       onMouseMove: (event) => {
+        if (Features.opinions.disableMouseHoverInResults) return;
+
         const { selected, mainInputFocused, onItemHover } = this.props
         const { movementX, movementY } = event.nativeEvent
         if (index === selected || !mainInputFocused) {
@@ -31,7 +33,7 @@ class ResultsList extends Component {
           // Hover item only when we had real movement of mouse
           // We should prevent changing of selection when user uses keyboard
           onItemHover(index)
-        }
+        }        
       },
       key: result.id,
     }
