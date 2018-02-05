@@ -7,6 +7,7 @@ import {
   UPDATE_RESULT,
   HIDE_RESULT,
   RESET,
+  UPDATE_TERM,
 } from '../../app/main/constants/actionTypes'
 
 const testPlugin = {
@@ -64,7 +65,7 @@ describe('updateTerm', () => {
   context('for empty term', () => {
     it('returns reset action', () => {
       expect(actions.updateTerm('')).toEqual({
-        type: RESET,
+        type: RESET
       })
     })
   })

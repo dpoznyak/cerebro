@@ -1,5 +1,6 @@
-const Features = {
+export const Features = {
     opinions : {
-        disableMouseHoverInResults: trues
+        disableMouseHoverInResults: true,
+        initialTerm: ' '
     }
 }

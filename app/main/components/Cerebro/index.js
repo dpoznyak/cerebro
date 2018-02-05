@@ -7,6 +7,8 @@ import { clipboard, remote } from 'electron'
 import { focusableSelector } from 'cerebro-ui'
 import escapeStringRegexp from 'escape-string-regexp'
 
+
+
 import debounce from 'lodash/debounce'
 
 import { trackEvent } from 'lib/trackEvent'
@@ -17,6 +19,7 @@ import ResultsList from '../ResultsList'
 import StatusBar from '../StatusBar'
 import styles from './styles.css'
 import * as searchActions from '../../actions/search'
+import { Features } from '../../../feature-toggles'
 
 import {
   WINDOW_WIDTH,
@@ -96,7 +99,8 @@ class Cerebro extends Component {
     this.cleanup = this.cleanup.bind(this)
     this.focusMainInput = this.focusMainInput.bind(this)
     this.selectItem = this.selectItem.bind(this)
-
+    this.showInitialTerm = this.showInitialTerm.bind(this)
+    
 
     this.state = {
       mainInputFocused: false
@@ -111,10 +115,21 @@ class Cerebro extends Component {
     // Cleanup event listeners on unload
     // NOTE: when page refreshed (location.reload) componentWillUnmount is not called
     window.addEventListener('beforeunload', this.cleanup)
+    this.electronWindow.on('show', this.showInitialTerm)
     this.electronWindow.on('show', this.focusMainInput)
     this.electronWindow.on('show', this.updateElectronWindow)
     this.electronWindow.on('show', trackShowWindow)
   }
+
+  showInitialTerm() {
+    if (Features.opinions.initialTerm) {
+
+      if (this.props) {
+        this.props.actions.updateTerm(Features.opinions.initialTerm);
+      }
+    }
+  }
+
   componentDidMount() {
     this.focusMainInput()
     this.updateElectronWindow()
@@ -264,6 +279,7 @@ class Cerebro extends Component {
     window.removeEventListener('resize', this.onWindowResize)
     window.removeEventListener('keydown', this.onDocumentKeydown)
     window.removeEventListener('beforeunload', this.cleanup)
+    this.electronWindow.removeListener('show', this.showInitialTerm)
     this.electronWindow.removeListener('show', this.focusMainInput)
     this.electronWindow.removeListener('show', this.updateElectronWindow)
     this.electronWindow.removeListener('show', trackShowWindow)

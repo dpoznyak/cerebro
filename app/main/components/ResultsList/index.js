@@ -4,7 +4,7 @@ import { VirtualScroll } from 'react-virtualized'
 import Row from './Row'
 import styles from './styles.css'
 import { RESULT_HEIGHT } from '../../constants/ui'
-
+import { Features } from '../../../feature-toggles'
 
 class ResultsList extends Component {
   constructor(props) {
